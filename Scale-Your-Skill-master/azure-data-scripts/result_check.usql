@@ -1,0 +1,28 @@
+@searchlog =
+    EXTRACT country_code string,
+    date_added DateTime,
+    job_board string,
+    job_description string,
+    job_title string,
+    job_type string,
+    location string,
+    organization string,
+    page_url string,
+    phone_number string,
+    salary string,
+    sector string
+
+    FROM "clean.csv"
+    USING Extractors.Csv(silent:true, skipFirstNRows:1);
+
+@q3 =
+    SELECT
+        COUNT(sector) AS total
+    FROM @searchlog
+    WHERE sector.ToLower().Contains("testing")
+    GROUP BY sector;
+
+
+    OUTPUT @q3
+            TO "ml.csv"
+            USING Outputters.Csv(outputHeader: true);
